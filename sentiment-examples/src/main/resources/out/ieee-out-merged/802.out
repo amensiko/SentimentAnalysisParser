@@ -1,4 +1,0 @@
-Content-Length: 255
-Sentiment: metadata
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-merged.bin
-resourceName: 802.sent

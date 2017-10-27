@@ -1,4 +1,0 @@
-Content-Length: 59
-Sentiment: radioactive
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-merged.bin
-resourceName: 989.sent

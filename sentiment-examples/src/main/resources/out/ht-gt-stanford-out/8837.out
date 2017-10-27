@@ -1,4 +1,0 @@
-Content-Length: 742
-Sentiment: love
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/en-stanford-sentiment.bin
-resourceName: 8837.sent

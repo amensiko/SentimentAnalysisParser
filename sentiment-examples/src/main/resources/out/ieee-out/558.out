@@ -1,4 +1,0 @@
-Content-Length: 306
-Sentiment: system
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-standards-model.bin
-resourceName: 558.sent

@@ -1,4 +1,0 @@
-Content-Length: 456
-Sentiment: interfaces
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-merged.bin
-resourceName: 997.sent

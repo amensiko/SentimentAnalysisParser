@@ -1,4 +1,0 @@
-Content-Length: 731
-Sentiment: systems
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-merged.bin
-resourceName: 1209.sent

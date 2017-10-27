@@ -1,4 +1,0 @@
-Content-Length: 207
-Sentiment: devices
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-standards-model.bin
-resourceName: 198.sent

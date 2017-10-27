@@ -1,4 +1,0 @@
-Content-Length: 852
-Sentiment: circuit
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/ieee-standards-model.bin
-resourceName: 582.sent
