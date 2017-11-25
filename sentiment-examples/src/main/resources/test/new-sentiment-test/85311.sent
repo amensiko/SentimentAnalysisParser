@@ -1,0 +1,1 @@
+My .htaccess seems to get edited when I (re)publish pages. Removes &quot;AddType x-mapp-php5 .php&quot; from it, which causes the 500. #WordPress

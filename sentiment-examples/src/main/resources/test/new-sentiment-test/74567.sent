@@ -1,0 +1,1 @@
+Inside Python GIL, http://www.dabeaz.com/python/GIL.pdf. Conclusion: Dont use python thread module

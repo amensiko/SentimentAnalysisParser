@@ -1,0 +1,1 @@
+@markusgiesen Yes, the escaping should work with multiple line text elements - the /* */ style comments allow specifically for it

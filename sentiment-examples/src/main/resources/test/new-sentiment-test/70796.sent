@@ -1,0 +1,1 @@
+Xmonad doesn't want to install on NetBSD 5. The dependencies won't compile.

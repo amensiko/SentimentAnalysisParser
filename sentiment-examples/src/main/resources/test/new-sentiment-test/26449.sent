@@ -1,0 +1,1 @@
+WTF? : memcached keys can't have spaces in them. Would be handy if the client libs caught that. Fargin HOURS lost due to that. Grumble

@@ -1,0 +1,1 @@
+@jankubr Without nokogiri you can't install it Its gem + in source code contains nokogiri's dependency.

@@ -1,0 +1,1 @@
+Just discovered a flaw in iPhone OS3.0 search: entries in the notes field (i.e., for contacts) are not indexed and thus not found.

@@ -299,6 +299,19 @@
 			<artifactId>json</artifactId>
 			<version>20140107</version>
 		</dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube -->
+    <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-youtube</artifactId>
+        <version>v3-rev186-1.23.0</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.gdata</groupId>
+        <artifactId>core</artifactId>
+        <version>1.47.1</version>
+    </dependency>
+    
+    
 
 	</dependencies>
 </project>

@@ -1,0 +1,1 @@
+Fixed display of code samples on automateit.org website. New Hpricot parser made nice multiline styled code into unbroken, unstyled text.

@@ -1,0 +1,1 @@
+@fredrikn Home* newHome = [[Home alloc] init]; Guess you're in init phase my friend. Will miss my shopping partner! ;)

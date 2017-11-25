@@ -1,0 +1,1 @@
+What a bummer, CLLocation in iPhone OS 3.0 made the course value invalid for non-3G S phones Gotta rework my app to remove that now

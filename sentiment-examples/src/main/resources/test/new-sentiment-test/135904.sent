@@ -1,0 +1,1 @@
+@hmans link_to_function or link_to with :method =&gt; :post should help you, I think.

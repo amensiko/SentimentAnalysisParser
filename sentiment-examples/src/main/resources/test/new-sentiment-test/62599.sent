@@ -1,0 +1,1 @@
+Using XML Catalog resolver with Saxon to avoid fetching DTDs from the net http://bit.ly/saxondtd - not worky with /etc/xml/catalog for me

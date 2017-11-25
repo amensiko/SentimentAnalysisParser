@@ -1,0 +1,1 @@
+just woke up to find xenservers crashed - there is a bug on centos 5 32bit where xenconsoled crashes hanging all the VMS

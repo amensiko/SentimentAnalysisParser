@@ -1,0 +1,1 @@
+@MarkusN About the only Android Source builder that works is the eclipse plugin. The ant build task doesn't support the Google APIs

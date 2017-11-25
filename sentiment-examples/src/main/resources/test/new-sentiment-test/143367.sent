@@ -1,0 +1,1 @@
+it &quot;should hit everything&quot; { SomeModel.methods(false).each { |m| SomeModel.send(m) rescue nil } } # almost 100% spec coverage

@@ -1,0 +1,1 @@
+has done initial pass on ripping out editmesh and replacing it with bmesh (this is for the blender project), yay! now to get it to work.
