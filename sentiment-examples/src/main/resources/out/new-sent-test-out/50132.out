@@ -1,4 +1,0 @@
-Content-Length: 105
-Sentiment: negative
-model: ../sentiment-models/src/main/resources/edu/usc/irds/sentiment/en-twitter-sentiment.bin
-resourceName: 50132.sent

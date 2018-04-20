@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
 
 /*
- * A class to help get data to build the ROC curve for our 80:20 tests for the HT-LG model.
+ * A class to help get data to build the ROC curves for 80:20 tests for the models.
  */
 public class ROC {
 

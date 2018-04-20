@@ -1,0 +1,149 @@
+/*
+ * Trinity College Senior Project 2018
+ */
+
+package edu.trincoll;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.apache.commons.io.FileUtils;
+
+/**
+ * A class to help get data to build the ROC curves for 80:20 tests for the Max
+ * Entropy models.
+ * 
+ * @author Anastasija Mensikova
+ * @version 2.0 Nov. 2017
+ * @see TestModel
+ */
+public class ROC {
+
+  private static final String correctLabels = "../sentiment-examples/src/main/resources/hybrid/hybrid-v3-test20-labels";
+  private static final String predictResults = "../sentiment-examples/src/main/resources/out/hybrid-v3-test20-out";
+
+  private static String outputFile = "../sentiment-examples/src/main/resources/hybridv3_roc_data.tsv";
+  private PrintWriter outputStream;
+
+  private final int SIZE = 4449;
+  private TprFpr[] tprFpr;
+
+  /**
+   * Inner private class to keep track of TPR and FPR
+   * 
+   * @author Anastasija Mensikova
+   * @version 1.0 Nov. 2017
+   */
+  private class TprFpr {
+    private double tpr = 0.0;
+    private double fpr = 0.0;
+
+    /**
+     * Constructor for initialisation
+     * 
+     * @param fpr
+     *          false positive rate
+     * @param tpr
+     *          true positive rate
+     */
+    public TprFpr(double fpr, double tpr) {
+      this.tpr = tpr;
+      this.fpr = fpr;
+    }
+
+    /**
+     * Method to get the current TPR
+     * 
+     * @return tpr
+     */
+    public double getTpr() {
+      return this.tpr;
+    }
+
+    /**
+     * Method to get the current FPR
+     * 
+     * @return tpr
+     */
+    public double getFpr() {
+      return this.fpr;
+    }
+
+  }
+
+  /**
+   * Constructor to intialise the output stream
+   * 
+   * @throws IOException
+   */
+  public ROC() throws IOException {
+    tprFpr = new TprFpr[SIZE];
+    Path outputFileName = Paths.get(outputFile);
+    Charset encoding = Charset.forName("UTF-8");
+    outputStream = new PrintWriter(
+        Files.newBufferedWriter(outputFileName, encoding));
+  }
+
+  /**
+   * Method to fill the array of points for the ROC curve
+   * 
+   * @throws IOException
+   */
+  public void fillArray() throws IOException {
+    outputStream.write("fpr\ttpr\n");
+    double trueRel = 0.0;
+    double trueNotRel = 0.0;
+    double falseRel = 0.0;
+    double falseNotRel = 0.0;
+    File input1 = new File(predictResults);
+    File input2 = new File(correctLabels);
+    int sampleNum = 0;
+    TestModel test = new TestModel(predictResults);
+    test.compareLabels();
+    double totalTrueRel = test.getTrueRel();
+    double totalFalseRel = test.getFalseRel();
+    String result = ""; // TN, TP, FN, FP
+    double tpr = 0.0, fpr = 0.0;
+    for (File file1 : input1.listFiles()) {
+      String id = file1.getName();
+      if (id.equals(".DS_Store") || id.equals("..out") || id.equals(".out"))
+        continue;
+      id = id.replace(".out", "");
+      int idint = Integer.valueOf(id);
+      String out1 = FileUtils.readFileToString(file1);
+      File file2 = new File(correctLabels + "/" + idint);
+      String out2 = FileUtils.readFileToString(file2);
+      if (out1.indexOf("NOT_RELEVANT") == -1
+          && out2.indexOf("NOT_RELEVANT") == -1) { // TP ==> TR
+        result = "TP";
+        trueRel++;
+        tpr = trueRel / totalTrueRel;
+        fpr = falseRel / totalFalseRel;
+      } else if (out1.indexOf("NOT_RELEVANT") == -1
+          && out2.indexOf("NOT_RELEVANT") != -1) { // FP ==> FR
+        result = "FP";
+        falseRel++;
+        fpr = falseRel / totalFalseRel;
+        tpr = trueRel / totalTrueRel;
+      }
+      tprFpr[sampleNum] = new TprFpr(fpr, tpr);
+      System.out.println(
+          tprFpr[sampleNum].getFpr() + "\t" + tprFpr[sampleNum].getTpr());
+      outputStream.write(tprFpr[sampleNum].getFpr() + "\t"
+          + tprFpr[sampleNum].getTpr() + "\n");
+      sampleNum++;
+    }
+    outputStream.close();
+  }
+
+  public static void main(String[] args) throws IOException {
+    ROC roc = new ROC();
+    roc.fillArray();
+  }
+
+}

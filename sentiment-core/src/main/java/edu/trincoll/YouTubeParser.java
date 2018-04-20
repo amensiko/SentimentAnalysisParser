@@ -1,8 +1,13 @@
+/*
+ * Trinity College Senior Project 2018
+ */
+
 package edu.trincoll;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -33,6 +38,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
+
+/**
+ * Class to parse YouTube data
+ * 
+ * @author Google, Anastasija Mensikova
+ * @version 1.0 Oct. 2017
+ */
 
 public class YouTubeParser {
 
@@ -201,7 +213,7 @@ public class YouTubeParser {
         downloadCaption(getCaptionIDFromUser());
         break;
       case DELETE:
-        //deleteCaption(getCaptionIDFromUser());
+        // deleteCaption(getCaptionIDFromUser());
         break;
       default:
         // All the available methods are used in sequence just for the sake
@@ -223,7 +235,7 @@ public class YouTubeParser {
 
           updateCaption(firstCaptionId, null);
           downloadCaption(firstCaptionId);
-          //deleteCaption(firstCaptionId);
+          // deleteCaption(firstCaptionId);
         }
       }
     } catch (GoogleJsonResponseException e) {
@@ -238,60 +250,36 @@ public class YouTubeParser {
       System.err.println("Throwable: " + t.getMessage());
       t.printStackTrace();
     }
-    // This OAuth 2.0 access scope allows for full read/write access to the
-    // authenticated user's account and requires requests to use an SSL
-    // connection.
-    /*
-     * List<String> scopes = Lists
-     * .newArrayList("https://www.googleapis.com/auth/youtube.force-ssl");
-     * 
-     * try { // Authorize the request. Credential credential =
-     * Auth.authorize(scopes, "captions");
-     * 
-     * // This object is used to make YouTube Data API requests. youtube = new
-     * YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY,
-     * credential).setApplicationName("youtube-cmdline-captions-sample")
-     * .build(); //youtube = new YouTube.Builder(new NetHttpTransport(), new
-     * JacksonFactory(), new HttpRequestInitializer() );
-     * 
-     * downloadCaption(getCaptionIDFromUser());
-     * 
-     * } catch (
-     * 
-     * GoogleJsonResponseException e) { System.err.println(
-     * "GoogleJsonResponseException code: " + e.getDetails().getCode() + " : " +
-     * e.getDetails().getMessage()); e.printStackTrace();
-     * 
-     * } catch (IOException e) { System.err.println("IOException: " +
-     * e.getMessage()); e.printStackTrace(); } catch (Throwable t) {
-     * System.err.println("Throwable: " + t.getMessage()); t.printStackTrace();
-     * }
-     */
   }
-  
-  private static void updateCaption(String captionId, File captionFile) throws IOException {
+
+  private static void updateCaption(String captionId, File captionFile)
+      throws IOException {
     // Modify caption's isDraft property to unpublish a caption track.
     CaptionSnippet updateCaptionSnippet = new CaptionSnippet();
     updateCaptionSnippet.setIsDraft(false);
     Caption updateCaption = new Caption();
     updateCaption.setId(captionId);
     updateCaption.setSnippet(updateCaptionSnippet);
-    
+
     Caption captionUpdateResponse;
 
     if (captionFile == null) {
-      // Call the YouTube Data API's captions.update method to update an existing caption track.
-      captionUpdateResponse = youtube.captions().update("snippet", updateCaption).execute();
+      // Call the YouTube Data API's captions.update method to update an
+      // existing caption track.
+      captionUpdateResponse = youtube.captions()
+          .update("snippet", updateCaption).execute();
 
     } else {
       // Create an object that contains the caption file's contents.
       InputStreamContent mediaContent = new InputStreamContent(
-              CAPTION_FILE_FORMAT, new BufferedInputStream(new FileInputStream(captionFile)));
+          CAPTION_FILE_FORMAT,
+          new BufferedInputStream(new FileInputStream(captionFile)));
       mediaContent.setLength(captionFile.length());
 
       // Create an API request that specifies that the mediaContent
       // object is the caption of the specified video.
-      Update captionUpdate = youtube.captions().update("snippet", updateCaption, mediaContent);
+      Update captionUpdate = youtube.captions().update("snippet", updateCaption,
+          mediaContent);
 
       // Set the upload type and add an event listener.
       MediaHttpUploader uploader = captionUpdate.getMediaHttpUploader();
@@ -308,92 +296,103 @@ public class YouTubeParser {
 
       // Set the upload state for the caption track file.
       MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
-          @Override
-          public void progressChanged(MediaHttpUploader uploader) throws IOException {
-              switch (uploader.getUploadState()) {
-                  // This value is set before the initiation request is
-                  // sent.
-                  case INITIATION_STARTED:
-                      System.out.println("Initiation Started");
-                      break;
-                  // This value is set after the initiation request
-                  //  completes.
-                  case INITIATION_COMPLETE:
-                      System.out.println("Initiation Completed");
-                      break;
-                  // This value is set after a media file chunk is
-                  // uploaded.
-                  case MEDIA_IN_PROGRESS:
-                      System.out.println("Upload in progress");
-                      System.out.println("Upload percentage: " + uploader.getProgress());
-                      break;
-                  // This value is set after the entire media file has
-                  //  been successfully uploaded.
-                  case MEDIA_COMPLETE:
-                      System.out.println("Upload Completed!");
-                      break;
-                  // This value indicates that the upload process has
-                  //  not started yet.
-                  case NOT_STARTED:
-                      System.out.println("Upload Not Started!");
-                      break;
-              }
+        @Override
+        public void progressChanged(MediaHttpUploader uploader)
+            throws IOException {
+          switch (uploader.getUploadState()) {
+          // This value is set before the initiation request is
+          // sent.
+          case INITIATION_STARTED:
+            System.out.println("Initiation Started");
+            break;
+          // This value is set after the initiation request
+          // completes.
+          case INITIATION_COMPLETE:
+            System.out.println("Initiation Completed");
+            break;
+          // This value is set after a media file chunk is
+          // uploaded.
+          case MEDIA_IN_PROGRESS:
+            System.out.println("Upload in progress");
+            System.out.println("Upload percentage: " + uploader.getProgress());
+            break;
+          // This value is set after the entire media file has
+          // been successfully uploaded.
+          case MEDIA_COMPLETE:
+            System.out.println("Upload Completed!");
+            break;
+          // This value indicates that the upload process has
+          // not started yet.
+          case NOT_STARTED:
+            System.out.println("Upload Not Started!");
+            break;
           }
+        }
       };
       uploader.setProgressListener(progressListener);
 
       // Upload the caption track.
       captionUpdateResponse = captionUpdate.execute();
-      System.out.println("\n================== Uploaded New Caption Track ==================\n");
+      System.out.println(
+          "\n================== Uploaded New Caption Track ==================\n");
     }
-    
+
     // Print information from the API response.
-    System.out.println("\n================== Updated Caption Track ==================\n");
+    System.out.println(
+        "\n================== Updated Caption Track ==================\n");
     CaptionSnippet snippet = captionUpdateResponse.getSnippet();
     System.out.println("  - ID: " + captionUpdateResponse.getId());
     System.out.println("  - Name: " + snippet.getName());
     System.out.println("  - Language: " + snippet.getLanguage());
     System.out.println("  - Draft Status: " + snippet.getIsDraft());
-    System.out.println("\n-------------------------------------------------------------\n");
+    System.out.println(
+        "\n-------------------------------------------------------------\n");
   }
 
   /**
    * Returns a list of caption tracks. (captions.listCaptions)
    *
-   * @param videoId The videoId parameter instructs the API to return the
-   * caption tracks for the video specified by the video id.
+   * @param videoId
+   *          The videoId parameter instructs the API to return the caption
+   *          tracks for the video specified by the video id.
    * @throws IOException
    */
   private static List<Caption> listCaptions(String videoId) throws IOException {
     // Call the YouTube Data API's captions.list method to
     // retrieve video caption tracks.
-    CaptionListResponse captionListResponse = youtube.captions().
-        list("snippet", videoId).execute();
+    CaptionListResponse captionListResponse = youtube.captions()
+        .list("snippet", videoId).execute();
 
     List<Caption> captions = captionListResponse.getItems();
     // Print information from the API response.
-    System.out.println("\n================== Returned Caption Tracks ==================\n");
+    System.out.println(
+        "\n================== Returned Caption Tracks ==================\n");
     CaptionSnippet snippet;
     for (Caption caption : captions) {
-        snippet = caption.getSnippet();
-        System.out.println("  - ID: " + caption.getId());
-        System.out.println("  - Name: " + snippet.getName());
-        System.out.println("  - Language: " + snippet.getLanguage());
-        System.out.println("\n-------------------------------------------------------------\n");
+      snippet = caption.getSnippet();
+      System.out.println("  - ID: " + caption.getId());
+      System.out.println("  - Name: " + snippet.getName());
+      System.out.println("  - Language: " + snippet.getLanguage());
+      System.out.println(
+          "\n-------------------------------------------------------------\n");
     }
 
     return captions;
   }
 
   /**
-   * Uploads a caption track in draft status that matches the API request parameters.
-   * (captions.insert)
+   * Uploads a caption track in draft status that matches the API request
+   * parameters. (captions.insert)
    *
-   * @param videoId the YouTube video ID of the video for which the API should
-   *  return caption tracks.
-   * @param captionLanguage language of the caption track.
-   * @param captionName name of the caption track.
-   * @param captionFile caption track binary file.
+   * @param videoId
+   *          the YouTube video ID of the video for which the API should return
+   *          caption tracks.
+   * @param captionLanguage
+   *          language of the caption track.
+   * @param captionName
+   *          name of the caption track.
+   * @param captionFile
+   *          caption track binary file.
    * @throws IOException
    */
   private static void uploadCaption(String videoId, String captionLanguage,
@@ -415,12 +414,14 @@ public class YouTubeParser {
 
     // Create an object that contains the caption file's contents.
     InputStreamContent mediaContent = new InputStreamContent(
-            CAPTION_FILE_FORMAT, new BufferedInputStream(new FileInputStream(captionFile)));
+        CAPTION_FILE_FORMAT,
+        new BufferedInputStream(new FileInputStream(captionFile)));
     mediaContent.setLength(captionFile.length());
 
     // Create an API request that specifies that the mediaContent
     // object is the caption of the specified video.
-    Insert captionInsert = youtube.captions().insert("snippet", captionObjectDefiningMetadata, mediaContent);
+    Insert captionInsert = youtube.captions().insert("snippet",
+        captionObjectDefiningMetadata, mediaContent);
 
     // Set the upload type and add an event listener.
     MediaHttpUploader uploader = captionInsert.getMediaHttpUploader();
@@ -437,37 +438,38 @@ public class YouTubeParser {
 
     // Set the upload state for the caption track file.
     MediaHttpUploaderProgressListener progressListener = new MediaHttpUploaderProgressListener() {
-        @Override
-        public void progressChanged(MediaHttpUploader uploader) throws IOException {
-            switch (uploader.getUploadState()) {
-                // This value is set before the initiation request is
-                // sent.
-                case INITIATION_STARTED:
-                    System.out.println("Initiation Started");
-                    break;
-                // This value is set after the initiation request
-                //  completes.
-                case INITIATION_COMPLETE:
-                    System.out.println("Initiation Completed");
-                    break;
-                // This value is set after a media file chunk is
-                // uploaded.
-                case MEDIA_IN_PROGRESS:
-                    System.out.println("Upload in progress");
-                    System.out.println("Upload percentage: " + uploader.getProgress());
-                    break;
-                // This value is set after the entire media file has
-                //  been successfully uploaded.
-                case MEDIA_COMPLETE:
-                    System.out.println("Upload Completed!");
-                    break;
-                // This value indicates that the upload process has
-                //  not started yet.
-                case NOT_STARTED:
-                    System.out.println("Upload Not Started!");
-                    break;
-            }
+      @Override
+      public void progressChanged(MediaHttpUploader uploader)
+          throws IOException {
+        switch (uploader.getUploadState()) {
+        // This value is set before the initiation request is
+        // sent.
+        case INITIATION_STARTED:
+          System.out.println("Initiation Started");
+          break;
+        // This value is set after the initiation request
+        // completes.
+        case INITIATION_COMPLETE:
+          System.out.println("Initiation Completed");
+          break;
+        // This value is set after a media file chunk is
+        // uploaded.
+        case MEDIA_IN_PROGRESS:
+          System.out.println("Upload in progress");
+          System.out.println("Upload percentage: " + uploader.getProgress());
+          break;
+        // This value is set after the entire media file has
+        // been successfully uploaded.
+        case MEDIA_COMPLETE:
+          System.out.println("Upload Completed!");
+          break;
+        // This value indicates that the upload process has
+        // not started yet.
+        case NOT_STARTED:
+          System.out.println("Upload Not Started!");
+          break;
         }
+      }
     };
     uploader.setProgressListener(progressListener);
 
@@ -475,61 +477,66 @@ public class YouTubeParser {
     Caption uploadedCaption = captionInsert.execute();
 
     // Print the metadata of the uploaded caption track.
-    System.out.println("\n================== Uploaded Caption Track ==================\n");
+    System.out.println(
+        "\n================== Uploaded Caption Track ==================\n");
     snippet = uploadedCaption.getSnippet();
     System.out.println("  - ID: " + uploadedCaption.getId());
     System.out.println("  - Name: " + snippet.getName());
     System.out.println("  - Language: " + snippet.getLanguage());
     System.out.println("  - Status: " + snippet.getStatus());
-    System.out
-        .println("\n-------------------------------------------------------------\n");
+    System.out.println(
+        "\n-------------------------------------------------------------\n");
   }
 
-
-
   /*
-   * Prompt the user to enter the path for the caption track file being uploaded.
+   * Prompt the user to enter the path for the caption track file being
+   * uploaded.
    */
   private static File getCaptionFromUser() throws IOException {
 
-      String path = "";
+    String path = "";
 
-      System.out.print("Please enter the path of the caption track file to upload: ");
-      BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-      path = bReader.readLine();
+    System.out
+        .print("Please enter the path of the caption track file to upload: ");
+    BufferedReader bReader = new BufferedReader(
+        new InputStreamReader(System.in));
+    path = bReader.readLine();
 
-      if (path.length() < 1) {
-          // Exit if the user does not provide a path to the file.
-          System.out.print("Path can not be empty!");
-          System.exit(1);
-      }
+    if (path.length() < 1) {
+      // Exit if the user does not provide a path to the file.
+      System.out.print("Path can not be empty!");
+      System.exit(1);
+    }
 
-      File captionFile = new File(path);
-      System.out.println("You chose " + captionFile + " to upload.");
+    File captionFile = new File(path);
+    System.out.println("You chose " + captionFile + " to upload.");
 
-      return captionFile;
+    return captionFile;
   }
 
   /*
-   * Prompt the user to enter the path for the caption track file being replaced.
+   * Prompt the user to enter the path for the caption track file being
+   * replaced.
    */
   private static File getUpdateCaptionFromUser() throws IOException {
 
-      String path = "";
+    String path = "";
 
-      System.out.print("Please enter the path of the new caption track file to upload"
-          + " (Leave empty if you don't want to upload a new file.):");
-      BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-      path = bReader.readLine();
+    System.out
+        .print("Please enter the path of the new caption track file to upload"
+            + " (Leave empty if you don't want to upload a new file.):");
+    BufferedReader bReader = new BufferedReader(
+        new InputStreamReader(System.in));
+    path = bReader.readLine();
 
-      if (path.length() < 1) {
-          return null;
-      }
+    if (path.length() < 1) {
+      return null;
+    }
 
-      File captionFile = new File(path);
-      System.out.println("You chose " + captionFile + " to upload.");
+    File captionFile = new File(path);
+    System.out.println("You chose " + captionFile + " to upload.");
 
-      return captionFile;
+    return captionFile;
   }
 
   /*
@@ -537,24 +544,21 @@ public class YouTubeParser {
    */
   private static String getActionFromUser() throws IOException {
 
-      String action = "";
+    String action = "";
 
-      System.out.print("Please choose action to be accomplished: ");
-      System.out.print("Options are: 'upload', 'list', 'update', 'download', 'delete',"
-          + " and 'all' ");
-      BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-      action = bReader.readLine();
+    System.out.print("Please choose action to be accomplished: ");
+    System.out
+        .print("Options are: 'upload', 'list', 'update', 'download', 'delete',"
+            + " and 'all' ");
+    BufferedReader bReader = new BufferedReader(
+        new InputStreamReader(System.in));
+    action = bReader.readLine();
 
-      return action;
+    return action;
   }
 
   public enum Action {
-    UPLOAD,
-    LIST,
-    UPDATE,
-    DOWNLOAD,
-    DELETE,
-    ALL
+    UPLOAD, LIST, UPDATE, DOWNLOAD, DELETE, ALL
   }
 
 }

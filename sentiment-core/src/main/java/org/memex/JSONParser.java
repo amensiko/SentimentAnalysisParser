@@ -189,14 +189,17 @@ public class JSONParser {
   }
 
   public static void main(String[] args) throws ParseException {
-    String fileName = args[0];
-    String outputName = args[1];
+//    String fileName = args[0];
+//    String outputName = args[1];
+    
 
+    String fileName = "../../../SarcasmAnalysis/SARC/2.0/main/comments.json";
+    String outputName = "../../../SarcasmAnalysis/SARC/2.0/main/testtt";
     JSONParser parser = new JSONParser(fileName, outputName);
     // parser.process("_id", new String[] { /*"cluster_id", */
     // /*"_source.extracted_text"*/ "annotation", "_source.extracted_text" });
     //parser.process("_id", new String[] { "annotation", "_source.raw_content" });
-    parser.process("_id", new String[] { "cluster_id" });
+    parser.process("7u4r6", new String[] { "text" });
 
     // TextToTagRatio textToTagRatio=new TextToTagRatio();
     // Metadata metadata = new Metadata();
